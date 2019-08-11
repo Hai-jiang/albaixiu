@@ -30,14 +30,16 @@
   <script type="text/javascript">
   $(function () {
     $('#loginBtn').on('click', function () {
+      // 选择登陆按钮
       var email = $('#email').val()
       var password = $('#password').val()
 
+      // 判断用户是否输入了邮箱
       if (email.trim().length == 0) {
         alert('请输入邮箱地址')
         return
       }
-
+      // 判断用户是否输入了密码 
       if (password.trim().length == 0) {
         alert('请输入密码')
         return
@@ -49,13 +51,13 @@
       url: '/login',
       data: {
         email: email,
-        password: password,
-        success: function (data) {
+        password: password
+      },
+      success: function (data) {
           location.href = 'index.html'
         },
-        error: function () {
-          alert('邮箱地址或者密码错误')
-        }
+      error: function () {
+        alert('邮箱地址或者密码错误')
       }
     })
   })
