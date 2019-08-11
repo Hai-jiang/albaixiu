@@ -50,10 +50,10 @@
       type: 'post',
       url: '/login',
       data: {
-        email: 'email',
-        password: 'password'
+        email: email,
+        password: password
       },
-      success: function (data) {
+      success: function (response) {
           location.href = 'index.html'
         },
       error: function () {
