@@ -19,4 +19,28 @@ $(function () {
         // 阻止表单默认添加行为
         return false
     })
+
+    // 当用户选择文件的时候
+    // 当选择文件后,触发change事件
+    $('#avatar').on('change', function () {
+        // 用户选择的文件
+        var formData = new FormData()
+        // this.files[0] 指的就是上传后的文件
+        formData.append('avatar', this.files[0])
+
+        $.ajax({
+            type: 'post',
+            url: '/upload',
+            data: formData,
+            // 告诉 ajax 不要解析请求参数
+            processData: false,
+            // 告诉 ajax 不要设置请求参数的类型
+            contentType: false,
+            success: function (response) {
+                // 实现头像预览功能
+                $('#preview').attr('src', response[0].avatar)
+                $('#hiddenAvatar').val(response[0].avatar)
+            }
+        })
+    })
 })
