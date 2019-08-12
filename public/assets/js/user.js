@@ -5,7 +5,7 @@ $(function () {
         var formData = $(this).serialize()
         // 向服务器端发送添加用户请求
         $.ajax({
-            tyoe: 'post',
+            type: 'post',
             url: '/users',
             data: formData,
             success: function () {
@@ -22,7 +22,7 @@ $(function () {
 
     // 当用户选择文件的时候
     // 当选择文件后,触发change事件
-    $('#avatar').on('change', function () {
+    $('#modifyBox').on('change', '#avatar', function () {
         // 用户选择的文件
         var formData = new FormData()
         // this.files[0] 指的就是上传后的文件
@@ -42,5 +42,54 @@ $(function () {
                 $('#hiddenAvatar').val(response[0].avatar)
             }
         })
+    })
+
+    // 向服务端发送请求,索要用户数据
+    $.ajax({
+        type: 'get',
+        url: '/users',
+        success: function (response) {
+            // console.log(response)
+            // 使用模板引擎将数据和HTML字符串进行拼接
+            var html = template('userTpl', {data: response})
+            // 将拼接好的字符串显示在页面中
+            $('#userBox').html(html)
+        }
+    })
+
+    // 通过事件委托的方式为编辑按钮添加点击事件
+    $('#userBox').on('click', '.edit', function () {
+        // 获取被点击用户的id值
+        var id = $(this).attr('data-id')
+        // 根据id获取用户的详细信息
+        $.ajax({
+            type: 'get',
+            url: '/users/' + id,
+            success: function (response) {
+                var html = template('modifyTpl', response)
+                // 将拼接好的字符串显示在页面中
+                $('#modifyBox').html(html)
+            }
+        })
+    })
+
+    // 修改表单,添加表单提交事件
+    $('#modifyBox').on('submit', '#modifyForm', function () {
+        // 获取用户在表单中输入的内容
+        var formData = $(this).serialize()
+        // 获取要修改的那个用户的id值
+        var id = $(this).attr('data-id')
+        // 发送请求,修改用户信息
+        $.ajax({
+            type: 'put',
+            url: '/users/' + id,
+            data: formData,
+            success: function (response) {
+                // 修改用户信息成功,重新加载页面
+                location.reload()
+            }
+        })
+        // 阻止表单默认提交
+        return false
     })
 })
